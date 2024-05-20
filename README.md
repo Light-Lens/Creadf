@@ -10,6 +10,8 @@ Custom and better ReadLine methods for C#.
 string prompt = "> ";
 ```
 
+
+
 2. Configure everything before reading the line
 > [!IMPORTANT]
 > It is a must to do the configuration before reading the line, otherwise it won't work.
@@ -80,6 +82,8 @@ public enum TokenType
 Creadf readline = new(Config);
 ```
 
+
+
 4. Initialize the default keybindings
 ```csharp
 Creadf.InitDefaultKeyBindings();
@@ -120,7 +124,9 @@ Replace `InitDefaultKeyBindings` by the below code
 AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.Control, HandleCtrlEnter);
 ```
 
-4. Start taking input
+
+
+5. Start taking input
 > [!IMPORTANT]
 > If prompt exists, then it is a must to print it before calling the `Readf` method.
 
