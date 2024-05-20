@@ -16,7 +16,7 @@ partial class Creadf
     private string TextBuffer = "";
     private readonly CreadfConfig Config;
 
-    private class CursorVec3
+    public class CursorVec3
     {
         public static int X { get; set; } = 0; // Cursor left
         public static int Y { get; set; } = 0; // Cursor top
