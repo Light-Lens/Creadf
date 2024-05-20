@@ -2,8 +2,8 @@ partial class Creadf
 {
     private void HandleEnter()
     {
-        // if (Config.ToggleAutoComplete)
-        //     ClearSuggestionBuffer();
+        if (Config.ToggleAutoComplete)
+            ClearSuggestionBuffer();
 
         int TotalDist = Config.LeftCursorStartPos + TextBuffer.Length;
         int y = TotalDist / Console.WindowWidth;
@@ -21,39 +21,43 @@ partial class Creadf
     // Set the current suggesion in the text.
     private void HandleCtrlEnter()
     {
-        // TextBuffer += Suggestion;
-        // LeftCursorPos += Suggestion.Length;
-        // CurrentSuggestionIdx = 0;
-        // UpdateBuffer(false);
+        TextBuffer += Suggestion;
+        CursorVec3.X += Suggestion.Length;
+        CurrentSuggestionIdx = 0;
+        UpdateBuffer(false);
     }
 
     // Render the next suggestion
     private void HandleTab()
     {
-        // if (Utils.Array.IsEmpty([.. Suggestions]))
-        //     return;
+        if (ArrayIsEmpty([..Config.Suggestions]))
+            return;
 
-        // CurrentSuggestionIdx = (CurrentSuggestionIdx + 1) % Suggestions.Count;
-        // if (CurrentSuggestionIdx < 0 || CurrentSuggestionIdx > Suggestions.Count)
-        //     CurrentSuggestionIdx = 0;
+        CurrentSuggestionIdx = (CurrentSuggestionIdx + 1) % Config.Suggestions.Count;
+        if (CurrentSuggestionIdx < 0 || CurrentSuggestionIdx > Config.Suggestions.Count)
+            CurrentSuggestionIdx = 0;
 
-        // UpdateBuffer();
+        UpdateBuffer();
     }
 
     // Render the suggestions without typing anything
     private void HandleCtrlSpacebar()
     {
-        // UpdateBuffer();
+        if (!Config.ToggleAutoComplete)
+            return;
+
+        ClearSuggestionBuffer();
+        RenderSuggestionBuffer();
     }
 
     // Clear all the suggestions
     private void HandleEscape()
     {
-        // if (!Config.ToggleAutoComplete)
-        //     return;
+        if (!Config.ToggleAutoComplete)
+            return;
 
-        // CurrentSuggestionIdx = 0;
-        // ClearSuggestionBuffer();
+        CurrentSuggestionIdx = 0;
+        ClearSuggestionBuffer();
     }
 
     // Clear all the text
@@ -137,8 +141,15 @@ partial class Creadf
 
     private void HandleEnd()
     {
-        // CursorVec3.X = Config.LeftCursorStartPos + TextBuffer.Length;
-        // CursorVec3.I = TextBuffer.Length;
+        int TotalDist = Config.LeftCursorStartPos + TextBuffer.Length;
+        int y = TotalDist / Console.WindowWidth;
+        int x = TotalDist - (y * Console.WindowWidth);
+        y += CursorVec3.Y;
+
+        // Move the cursor to the end of the text
+        CursorVec3.I = TextBuffer.Length;
+        CursorVec3.X = x;
+        CursorVec3.Y = y;
     }
 
     private void HandleLeftArrow()
@@ -153,7 +164,6 @@ partial class Creadf
                 CursorVec3.X--;
                 CursorVec3.X += Console.WindowWidth;
                 CursorVec3.Y--;
-                // Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
             }
         }
     }
@@ -173,14 +183,6 @@ partial class Creadf
 
             CursorVec3.X -= length;
             CursorVec3.I -= length;
-
-            if (CursorVec3.X < 0)
-            {
-                CursorVec3.X--;
-                CursorVec3.X += Console.WindowWidth;
-                CursorVec3.Y--;
-                // Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
-            }
         }
     }
 
@@ -195,7 +197,6 @@ partial class Creadf
             {
                 CursorVec3.X = 1;
                 CursorVec3.Y++;
-                // Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
             }
         }
     }

@@ -57,6 +57,7 @@ partial class Creadf
                 // Update the positions
                 CursorVec3.I++;
                 CursorVec3.X++;
+                CurrentSuggestionIdx = 0;
 
                 // Update the text buffer
                 UpdateBuffer();
