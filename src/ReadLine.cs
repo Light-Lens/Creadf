@@ -76,7 +76,6 @@ partial class Creadf
             if (CursorVec3.Y >= Console.WindowHeight)
                 CursorVec3.Y = Console.WindowHeight - 1;
 
-
             // Set the cursor pos to where it should be
             Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
         }
