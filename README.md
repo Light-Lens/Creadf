@@ -113,9 +113,6 @@ However you can add more or other Keybindings by using the below method:
 
 ```csharp
 public void AddKeyBindings(ConsoleKey key, ConsoleModifiers modifier, Action action)
-{
-    KeyBindings.Add((key, modifier), action);
-}
 ```
 
 Replace `InitDefaultKeyBindings` by the below code
