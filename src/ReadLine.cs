@@ -62,6 +62,20 @@ partial class Creadf
                 UpdateBuffer();
             }
 
+            // Do text wrapping across the terminal window if the text is too long.
+            if (CursorVec3.X >= Console.WindowWidth)
+            {
+                Console.WriteLine();
+
+                CursorVec3.X = 0;
+                CursorVec3.Y++;
+                Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
+                CursorVec3.X++;
+            }
+
+            if (CursorVec3.Y >= Console.WindowHeight)
+                CursorVec3.Y = Console.WindowHeight - 1;
+
             // Set the cursor pos to where it should be
             Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
         }
