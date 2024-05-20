@@ -3,8 +3,6 @@ partial class Creadf
     private string RenderedTextBuffer = "";
     private Tokenizer tokenizer;
 
-    //TODO: Fix the word wrap thing. It's broken. Fix it.
-
     // Render the updated input with syntax highlighting
     private void RenderTextBuffer()
     {
@@ -44,17 +42,6 @@ partial class Creadf
         // EOL is useless so don't render it.
         if (token.Type == Tokenizer.TokenType.EOL)
             return;
-
-        // Do text wrapping across the terminal window if the text is too long.
-        if (CursorVec3.X >= Console.WindowWidth)
-        {
-            Console.WriteLine();
-
-            CursorVec3.X = 1;
-            CursorVec3.Y++;
-            Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
-            CursorVec3.X++;
-        }
 
         // Check if the token is to be highlighted or not. If yes, then highlight.
         string Token = token.Name[char_idx..];

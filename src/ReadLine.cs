@@ -62,10 +62,6 @@ partial class Creadf
                 UpdateBuffer();
             }
 
-            // Clamp the x and y positions of the cursor to the dimensions of the window.
-            CursorVec3.X %= Console.WindowWidth;
-            CursorVec3.Y %= Console.WindowHeight;
-
             // Set the cursor pos to where it should be
             Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
         }
