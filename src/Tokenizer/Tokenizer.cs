@@ -1,4 +1,4 @@
-partial class ReadLine
+partial class Creadf
 {
     public partial class Tokenizer
     {

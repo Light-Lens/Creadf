@@ -1,4 +1,4 @@
-partial class ReadLine
+partial class Creadf
 {
     private string RenderedTextBuffer = "";
     private Tokenizer tokenizer;
@@ -39,7 +39,7 @@ partial class ReadLine
 
     private void RenderToken(int token_idx, int char_idx)
     {
-        ReadLine.Tokenizer.Token token = tokenizer.tokens[token_idx];
+        Creadf.Tokenizer.Token token = tokenizer.tokens[token_idx];
 
         // EOL is useless so don't render it.
         if (token.Type == Tokenizer.TokenType.EOL)
@@ -58,7 +58,7 @@ partial class ReadLine
 
         // Check if the token is to be highlighted or not. If yes, then highlight.
         string Token = token.Name[char_idx..];
-        if (Config.Toggle_color_coding && Config.SyntaxHighlightCodes.TryGetValue(token.Type, out ConsoleColor color))
+        if (Config.ToggleColorCoding && Config.SyntaxHighlightCodes.TryGetValue(token.Type, out ConsoleColor color))
             Terminal.Print(Token, color, false);
 
         // Otherwise update text after cursor normally.

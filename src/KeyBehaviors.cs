@@ -1,8 +1,8 @@
-partial class ReadLine
+partial class Creadf
 {
     private void HandleEnter()
     {
-        // if (Config.Toggle_autocomplete)
+        // if (Config.ToggleAutoComplete)
         //     ClearSuggestionBuffer();
 
         int TotalDist = Config.LeftCursorStartPos + TextBuffer.Length;
@@ -49,7 +49,7 @@ partial class ReadLine
     // Clear all the suggestions
     private void HandleEscape()
     {
-        // if (!Config.Toggle_autocomplete)
+        // if (!Config.ToggleAutoComplete)
         //     return;
 
         // CurrentSuggestionIdx = 0;

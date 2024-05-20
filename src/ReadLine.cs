@@ -1,20 +1,20 @@
-struct ReadLineConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<ReadLine.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool Toggle_autocomplete = true, bool Toggle_color_coding = true, List<string> Suggestions = null)
+struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool ToggleAutoComplete = true, bool ToggleColorCoding = true, List<string> Suggestions = null)
 {
     public int LeftCursorStartPos { get; set; } = LeftCursorStartPos;
     public int TopCursorStartPos { get; set; } = TopCursorStartPos;
-    public bool Toggle_autocomplete { get; set; } = Toggle_autocomplete;
-    public bool Toggle_color_coding { get; set; } = Toggle_color_coding;
+    public bool ToggleAutoComplete { get; set; } = ToggleAutoComplete;
+    public bool ToggleColorCoding { get; set; } = ToggleColorCoding;
     public List<string> Suggestions { get; set; } = Suggestions ?? ([]);
-    public Dictionary<ReadLine.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes { get; set; } = SyntaxHighlightCodes;
+    public Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes { get; set; } = SyntaxHighlightCodes;
 }
 
-partial class ReadLine
+partial class Creadf
 {
     public bool Loop = true;
     public Dictionary<(ConsoleKey, ConsoleModifiers), Action> KeyBindings = [];
 
     private string TextBuffer = "";
-    private readonly ReadLineConfig Config;
+    private readonly CreadfConfig Config;
 
     private class CursorVec3
     {
@@ -28,7 +28,7 @@ partial class ReadLine
         }
     }
 
-    public ReadLine(ReadLineConfig Config)
+    public Creadf(CreadfConfig Config)
     {
         this.Config = Config;
         CursorVec3.X = this.Config.LeftCursorStartPos;

@@ -1,4 +1,4 @@
-partial class ReadLine
+partial class Creadf
 {
     private string CurrentSuggestionBuffer = "";
     private string RenderedSuggestionsBuffer = "";

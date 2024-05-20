@@ -1,4 +1,4 @@
-partial class ReadLine
+partial class Creadf
 {
     private (int, int) GetTokenDiff(string Text, string Text2)
     {
@@ -7,7 +7,7 @@ partial class ReadLine
         tokenizer.Tokenize();
 
         // Tokenize the updated rendered input text
-        ReadLine.Tokenizer _tokenizer = new("") { tokens = [], line = Text2 };
+        Creadf.Tokenizer _tokenizer = new("") { tokens = [], line = Text2 };
         _tokenizer.Tokenize();
 
         int SmallestTokenListLen = Math.Min(tokenizer.tokens.Count, _tokenizer.tokens.Count);
