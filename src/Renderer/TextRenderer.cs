@@ -5,14 +5,17 @@ partial class Creadf
 
     private void UpdateBuffer(bool RenderSuggestions=true)
     {
+        if (TextBuffer == RenderedTextBuffer)
+            return;
+
         ClearTextBuffer();
         RenderTextBuffer();
 
-        if (RenderSuggestions)
-        {
-            ClearSuggestionBuffer();
-            RenderSuggestionBuffer();
-        }
+        if (!this.Config.ToggleAutoComplete || !RenderSuggestions)
+            return;
+
+        ClearSuggestionBuffer();
+        RenderSuggestionBuffer();
     }
 
     // Clear changed text buffer
@@ -22,7 +25,7 @@ partial class Creadf
         int DiffStart = GetTextDiff(TextBuffer, RenderedTextBuffer);
         int TotalDist = Config.LeftCursorStartPos + DiffStart;
 
-        (int x, int y) = CalcXYCordinate(TotalDist);
+        (int x, int y) = CalcXYCordinates(TotalDist);
         y += CursorVec.Y;
 
         // Clear the screen.

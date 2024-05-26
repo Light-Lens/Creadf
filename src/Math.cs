@@ -1,7 +1,7 @@
 partial class Creadf
 {
     // (int: x, int: y)
-    private (int, int) CalcXYCordinate(int TotalDist)
+    private (int, int) CalcXYCordinates(int TotalDist)
     {
         // Calculate the exact x and y positions to put the cursor at.
         int y = TotalDist / Console.WindowWidth;
