@@ -14,8 +14,7 @@ partial class Creadf
         CursorVec.X++;
         CurrentSuggestionIdx = 0;
 
-        // Set the cursor pos to where it should be
-        Console.SetCursorPosition(CursorVec.X, CursorVec.Y);
+        UpdateBuffer();
     }
 
     private void HandleEnter()
@@ -24,7 +23,7 @@ partial class Creadf
             ClearSuggestionBuffer();
 
         int TotalDist = Config.LeftCursorStartPos + TextBuffer.Length;
-        int y = TotalDist / Console.WindowWidth;
+        (int _, int y) = CalcXYCordinate(TotalDist);
         y += CursorVec.Y;
 
         // Move the cursor to the end of the text
@@ -89,24 +88,24 @@ partial class Creadf
     //     UpdateBuffer(false);
     // }
 
-    // private void HandleBackspace()
-    // {
-    //     if (CursorVec.I > 0)
-    //     {
-    //         CursorVec.I--;
-    //         CursorVec.X--;
-    //         TextBuffer = TextBuffer.Remove(CursorVec.I, 1);
+    private void HandleBackspace()
+    {
+        if (CursorVec.I > 0)
+        {
+            CursorVec.I--;
+            CursorVec.X--;
+            TextBuffer = TextBuffer.Remove(CursorVec.I, 1);
 
-    //         if (CursorVec.X < 0)
-    //         {
-    //             CursorVec.X--;
-    //             CursorVec.X += Console.WindowWidth;
-    //             CursorVec.Y--;
-    //         }
+            if (CursorVec.X < 0)
+            {
+                CursorVec.X--;
+                CursorVec.X += Console.WindowWidth;
+                CursorVec.Y--;
+            }
 
-    //         UpdateBuffer();
-    //     }
-    // }
+            UpdateBuffer();
+        }
+    }
 
     // private void HandleCtrlBackspace()
     // {
@@ -126,14 +125,14 @@ partial class Creadf
     //     }
     // }
 
-    // private void HandleDelete()
-    // {
-    //     if (CursorVec.I < TextBuffer.Length)
-    //     {
-    //         TextBuffer = TextBuffer.Remove(CursorVec.X - Config.LeftCursorStartPos, 1);
-    //         UpdateBuffer();
-    //     }
-    // }
+    private void HandleDelete()
+    {
+        if (CursorVec.I < TextBuffer.Length)
+        {
+            TextBuffer = TextBuffer.Remove(CursorVec.X - Config.LeftCursorStartPos, 1);
+            UpdateBuffer();
+        }
+    }
 
     // private void HandleCtrlDelete()
     // {
@@ -170,21 +169,21 @@ partial class Creadf
     //     CursorVec.Y = y;
     // }
 
-    // private void HandleLeftArrow()
-    // {
-    //     if (CursorVec.I > 0)
-    //     {
-    //         CursorVec.I--;
-    //         CursorVec.X--;
+    private void HandleLeftArrow()
+    {
+        if (CursorVec.I > 0)
+        {
+            CursorVec.I--;
+            CursorVec.X--;
 
-    //         if (CursorVec.X < 0)
-    //         {
-    //             CursorVec.X--;
-    //             CursorVec.X += Console.WindowWidth;
-    //             CursorVec.Y--;
-    //         }
-    //     }
-    // }
+            if (CursorVec.X < 0)
+            {
+                CursorVec.X--;
+                CursorVec.X += Console.WindowWidth;
+                CursorVec.Y--;
+            }
+        }
+    }
 
     // private void HandleCtrlLeftArrow()
     // {
@@ -204,20 +203,20 @@ partial class Creadf
     //     }
     // }
 
-    // private void HandleRightArrow()
-    // {
-    //     if (CursorVec.I < TextBuffer.Length)
-    //     {
-    //         CursorVec.I++;
-    //         CursorVec.X++;
+    private void HandleRightArrow()
+    {
+        if (CursorVec.I < TextBuffer.Length)
+        {
+            CursorVec.I++;
+            CursorVec.X++;
 
-    //         if (CursorVec.X >= Console.WindowWidth)
-    //         {
-    //             CursorVec.X = 1;
-    //             CursorVec.Y++;
-    //         }
-    //     }
-    // }
+            if (CursorVec.X >= Console.WindowWidth)
+            {
+                CursorVec.X = 1;
+                CursorVec.Y++;
+            }
+        }
+    }
 
     // private void HandleCtrlRightArrow()
     // {

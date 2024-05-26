@@ -1,5 +1,15 @@
 partial class Creadf
 {
+    // (int: x, int: y)
+    private (int, int) CalcXYCordinate(int TotalDist)
+    {
+        // Calculate the exact x and y positions to put the cursor at.
+        int y = TotalDist / Console.WindowWidth;
+        int x = TotalDist - (y * Console.WindowWidth);
+
+        return (x, y);
+    }
+
     private (int, int) GetTokenDiff(string Text, string Text2)
     {
         // Tokenize the updated input text
