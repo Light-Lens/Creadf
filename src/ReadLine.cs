@@ -1,38 +1,20 @@
-struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool ToggleAutoComplete = true, bool ToggleColorCoding = true, List<string> Suggestions = null)
-{
-    public int LeftCursorStartPos { get; set; } = LeftCursorStartPos;
-    public int TopCursorStartPos { get; set; } = TopCursorStartPos;
-    public bool ToggleAutoComplete { get; set; } = ToggleAutoComplete;
-    public bool ToggleColorCoding { get; set; } = ToggleColorCoding;
-    public List<string> Suggestions { get; set; } = Suggestions ?? ([]);
-    public Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes { get; set; } = SyntaxHighlightCodes;
-}
-
 partial class Creadf
 {
     public bool Loop = true;
+    public CursorVec3 CursorVec;
     public Dictionary<(ConsoleKey, ConsoleModifiers), Action> KeyBindings = [];
 
     private string TextBuffer = "";
     private readonly CreadfConfig Config;
 
-    public class CursorVec3
-    {
-        public static int X { get; set; } = 0; // Cursor left
-        public static int Y { get; set; } = 0; // Cursor top
-        public static int I { get; set; } = 0; // Cursor pos on text buffer
-
-        public static void Reset()
-        {
-            X = 0; Y = 0; I = 0;
-        }
-    }
-
     public Creadf(CreadfConfig Config)
     {
         this.Config = Config;
-        CursorVec3.X = this.Config.LeftCursorStartPos;
-        CursorVec3.Y = this.Config.TopCursorStartPos;
+        CursorVec = new()
+        {
+            X = this.Config.LeftCursorStartPos,
+            Y = this.Config.TopCursorStartPos
+        };
     }
 
     public string Readf()
@@ -42,46 +24,10 @@ partial class Creadf
             ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
             (ConsoleKey, ConsoleModifiers) Key = (KeyInfo.Key, KeyInfo.Modifiers);
 
-            if (KeyBindings.TryGetValue(Key, out Action func))
-                func();
-
-            // Ignore control characters other than the handled keybindings
-            else if (char.IsControl(KeyInfo.KeyChar))
-                continue;
-
-            else
-            {
-                // Insert the character at the cursor position
-                TextBuffer = TextBuffer.Insert(CursorVec3.I, KeyInfo.KeyChar.ToString());
-
-                // Update the positions
-                CursorVec3.I++;
-                CursorVec3.X++;
-                CurrentSuggestionIdx = 0;
-
-                // Update the text buffer
-                UpdateBuffer();
-            }
-
-            // Do text wrapping across the terminal window if the text is too long.
-            if (CursorVec3.X >= Console.WindowWidth)
-            {
-                Console.WriteLine();
-
-                CursorVec3.X = 0;
-                CursorVec3.Y++;
-                Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
-                CursorVec3.X++;
-            }
-
-            if (CursorVec3.Y >= Console.WindowHeight)
-                CursorVec3.Y = Console.WindowHeight - 1;
-
-            // Set the cursor pos to where it should be
-            Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
+            if (KeyBindings.TryGetValue(Key, out Action func)) func();
+            else KeyPress(KeyInfo);
         }
 
-        CursorVec3.Reset();
         return TextBuffer;
     }
 
@@ -90,11 +36,11 @@ partial class Creadf
         ClearTextBuffer();
         RenderTextBuffer();
 
-        if (!RenderSuggestions)
-            return;
-
-        ClearSuggestionBuffer();
-        RenderSuggestionBuffer();
+        if (RenderSuggestions)
+        {
+            ClearSuggestionBuffer();
+            RenderSuggestionBuffer();
+        }
     }
 
     public void AddKeyBindings(ConsoleKey key, ConsoleModifiers modifier, Action action)
@@ -105,27 +51,27 @@ partial class Creadf
     public void InitDefaultKeyBindings()
     {
         AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.None, HandleEnter);
-        AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.Control, HandleCtrlEnter);
+        // AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.Control, HandleCtrlEnter);
 
-        AddKeyBindings(ConsoleKey.Tab, ConsoleModifiers.None, HandleTab);
-        AddKeyBindings(ConsoleKey.Spacebar, ConsoleModifiers.Control, HandleCtrlSpacebar);
+        // AddKeyBindings(ConsoleKey.Tab, ConsoleModifiers.None, HandleTab);
+        // AddKeyBindings(ConsoleKey.Spacebar, ConsoleModifiers.Control, HandleCtrlSpacebar);
 
-        AddKeyBindings(ConsoleKey.Escape, ConsoleModifiers.None, HandleEscape);
-        AddKeyBindings(ConsoleKey.Escape, ConsoleModifiers.Shift, HandleShiftEscape);
+        // AddKeyBindings(ConsoleKey.Escape, ConsoleModifiers.None, HandleEscape);
+        // AddKeyBindings(ConsoleKey.Escape, ConsoleModifiers.Shift, HandleShiftEscape);
 
-        AddKeyBindings(ConsoleKey.Home, ConsoleModifiers.None, HandleHome);
-        AddKeyBindings(ConsoleKey.End, ConsoleModifiers.None, HandleEnd);
+        // AddKeyBindings(ConsoleKey.Home, ConsoleModifiers.None, HandleHome);
+        // AddKeyBindings(ConsoleKey.End, ConsoleModifiers.None, HandleEnd);
 
-        AddKeyBindings(ConsoleKey.Delete, ConsoleModifiers.None, HandleDelete);
-        AddKeyBindings(ConsoleKey.Delete, ConsoleModifiers.Control, HandleCtrlDelete);
+        // AddKeyBindings(ConsoleKey.Delete, ConsoleModifiers.None, HandleDelete);
+        // AddKeyBindings(ConsoleKey.Delete, ConsoleModifiers.Control, HandleCtrlDelete);
 
-        AddKeyBindings(ConsoleKey.Backspace, ConsoleModifiers.None, HandleBackspace);
-        AddKeyBindings(ConsoleKey.Backspace, ConsoleModifiers.Control, HandleCtrlBackspace);
+        // AddKeyBindings(ConsoleKey.Backspace, ConsoleModifiers.None, HandleBackspace);
+        // AddKeyBindings(ConsoleKey.Backspace, ConsoleModifiers.Control, HandleCtrlBackspace);
 
-        AddKeyBindings(ConsoleKey.LeftArrow, ConsoleModifiers.None, HandleLeftArrow);
-        AddKeyBindings(ConsoleKey.LeftArrow, ConsoleModifiers.Control, HandleCtrlLeftArrow);
+        // AddKeyBindings(ConsoleKey.LeftArrow, ConsoleModifiers.None, HandleLeftArrow);
+        // AddKeyBindings(ConsoleKey.LeftArrow, ConsoleModifiers.Control, HandleCtrlLeftArrow);
 
-        AddKeyBindings(ConsoleKey.RightArrow, ConsoleModifiers.None, HandleRightArrow);
-        AddKeyBindings(ConsoleKey.RightArrow, ConsoleModifiers.Control, HandleCtrlRightArrow);
+        // AddKeyBindings(ConsoleKey.RightArrow, ConsoleModifiers.None, HandleRightArrow);
+        // AddKeyBindings(ConsoleKey.RightArrow, ConsoleModifiers.Control, HandleCtrlRightArrow);
     }
 }

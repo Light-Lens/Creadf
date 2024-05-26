@@ -1,66 +1,55 @@
 partial class Creadf
 {
-    private string Suggestion = "";
-    private string RenderedSuggestionsBuffer = "";
-    private List<string> AllSuggestions = [];
-    private int CurrentSuggestionIdx = 0;
+    private string RenderedTextBuffer = "";
+    private Tokenizer tokenizer;
 
-    private void ClearSuggestionBuffer()
+    // Render the updated input with syntax highlighting
+    private void RenderTextBuffer()
     {
-        if (StrIsEmpty(RenderedSuggestionsBuffer))
-            return;
+        // // Get difference between TextBuffer and RenderedTextBuffer
+        // (int, int) DiffTokenIdx = GetTokenDiff(TextBuffer, RenderedTextBuffer);
 
-        Console.SetCursorPosition(0, CursorVec3.Y + 1);
-        Console.Write(new string(' ', RenderedSuggestionsBuffer.Length));
-        Console.SetCursorPosition(CursorVec3.X, CursorVec3.Y);
+        // // Loop through each token starting from first different token
+        // RenderToken(DiffTokenIdx.Item1, DiffTokenIdx.Item2);
+        // for (int i = DiffTokenIdx.Item1 + 1; i < tokenizer.tokens.Count; i++)
+        //     RenderToken(i, 0);
 
-        RenderedSuggestionsBuffer = "";
+        RenderedTextBuffer = TextBuffer;
     }
 
-    private void GetSuggestion()
+    // Clear changed text buffer
+    private void ClearTextBuffer()
     {
-        if (StrIsEmpty(TextBuffer))
-        {
-            AllSuggestions = [];
-            return;
-        }
+        // // Find the position where text buffer and rendered text buffer differ at.
+        // int DiffStart = GetTextDiff(TextBuffer, RenderedTextBuffer);
+        // int TotalDist = Config.LeftCursorStartPos + DiffStart;
 
-        AllSuggestions = Config.Suggestions.Where(x => x.StartsWith(TextBuffer)).ToList();
+        // // Calculate the exact x and y positions to put the cursor at.
+        // int y = TotalDist / Console.WindowWidth;
+        // int x = TotalDist - (y * Console.WindowWidth);
+        // y += CursorVec.Y;
+
+        // // Clear the screen.
+        // Console.SetCursorPosition(x, y);
+        // Console.Write(new string(' ', RenderedTextBuffer[DiffStart..].Length));
+        // Console.SetCursorPosition(x, y);
     }
 
-    private void RenderSuggestionBuffer()
+    private void RenderToken(int token_idx, int char_idx)
     {
-        GetSuggestion();
+        // Creadf.Tokenizer.Token token = tokenizer.tokens[token_idx];
 
-        if (ArrayIsEmpty(AllSuggestions.ToArray()))
-            return;
+        // // EOL is useless so don't render it.
+        // if (token.Type == Tokenizer.TokenType.EOL)
+        //     return;
 
-        else if (CurrentSuggestionIdx < 0 || CurrentSuggestionIdx > AllSuggestions.Count-1)
-            CurrentSuggestionIdx = 0;
+        // // Check if the token is to be highlighted or not. If yes, then highlight.
+        // string Token = token.Name[char_idx..];
+        // if (Config.ToggleColorCoding && Config.SyntaxHighlightCodes.TryGetValue(token.Type, out ConsoleColor color))
+        //     Terminal.Print(Token, color, false);
 
-        // Get the current suggestion
-        Suggestion = AllSuggestions[CurrentSuggestionIdx];
-
-        // Move to new line to render suggestions
-        Console.WriteLine();
-
-        // Render the suggestions
-        string Buffer = "";
-        for (int i = 0; i < AllSuggestions.Count; i++)
-        {
-            Buffer += AllSuggestions[i] + "    ";
-            Terminal.Print(AllSuggestions[i] + "    ", Suggestion == AllSuggestions[i] ? ConsoleColor.Blue : ConsoleColor.DarkGray, false);
-
-            if ((i+1) % 12 == 0)
-            {
-                string whitespace = new(' ', Console.WindowWidth - (Buffer.Length % Console.WindowWidth));
-                Buffer += whitespace;
-                Console.Write(whitespace);
-            }
-        }
-
-        // Get only the uncommon part of suggestion
-        Suggestion = TextBuffer.Length <= Suggestion.Length ? Suggestion[TextBuffer.Length..] : "";
-        RenderedSuggestionsBuffer = Buffer;
+        // // Otherwise update text after cursor normally.
+        // else
+        //     Console.Write(Token);
     }
 }
