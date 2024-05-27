@@ -39,6 +39,13 @@ partial class Creadf
         (int x, int y) = CalcXYCordinates(CursorVec.X);
         y += CursorVec.Y;
 
+        if (y >= Console.WindowHeight - 1 && x >= Console.WindowWidth - 1)
+        {
+            y--;
+            CursorVec.Y--;
+            Console.WriteLine();
+        }
+
         Console.SetCursorPosition(x, y);
     }
 }

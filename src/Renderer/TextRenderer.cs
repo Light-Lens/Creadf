@@ -21,7 +21,7 @@ partial class Creadf
     // Clear changed text buffer
     private void ClearTextBuffer()
     {
-        // // Find the position where text buffer and rendered text buffer differ at.
+        // Find the position where text buffer and rendered text buffer differ at.
         int DiffStart = GetTextDiff(TextBuffer, RenderedTextBuffer);
         int TotalDist = Config.LeftCursorStartPos + DiffStart;
 

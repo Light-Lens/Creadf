@@ -9,15 +9,15 @@ partial class Terminal
         Console.ForegroundColor = InputColor;
 
         string Output;
-        if (!(Config.ToggleAutoComplete && Config.ToggleColorCoding))
-            Output = Console.ReadLine();
-
-        else
+        if (Config.ToggleAutoComplete || Config.ToggleColorCoding)
         {
             Creadf readline = new(Config);
             readline.InitDefaultKeyBindings();
             Output = readline.Readf();
         }
+
+        else
+            Output = Console.ReadLine();
 
         // Reset the foreground color to the default color and return the output.
         Console.ForegroundColor = DefaultColor;
