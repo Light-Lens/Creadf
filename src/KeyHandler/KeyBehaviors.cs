@@ -42,6 +42,7 @@ partial class Creadf
         CursorVec.I += Suggestion.Length;
         CursorVec.X += Suggestion.Length;
         CurrentSuggestionIdx = 0;
+        Suggestion = "";
 
         HandleEscape();
         UpdateBuffer(false);

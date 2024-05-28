@@ -17,7 +17,7 @@ partial class Creadf
         tokenizer.Tokenize();
 
         // Tokenize the updated rendered input text
-        Creadf.Tokenizer _tokenizer = new("") { tokens = [], line = Text2 };
+        Tokenizer _tokenizer = new("") { tokens = [], line = Text2 };
         _tokenizer.Tokenize();
 
         int SmallestTokenListLen = Math.Min(tokenizer.tokens.Count, _tokenizer.tokens.Count);
