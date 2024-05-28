@@ -14,6 +14,15 @@ partial class Creadf
         if (!this.Config.ToggleAutoComplete || !RenderSuggestions)
             return;
 
+        // If the cursor has reached the bottom of the window, then move it up by one point.
+        // To ensure that the cursor is not going beyond the window which will crash the program.
+        if (CursorVec.Y >= Console.WindowHeight - 1)
+        {
+            CursorVec.Y--;
+            SetCursorPosition(CursorVec.X);
+            Console.WriteLine();
+        }
+
         ClearSuggestionBuffer();
         RenderSuggestionBuffer();
     }
@@ -25,13 +34,9 @@ partial class Creadf
         int DiffStart = GetTextDiff(TextBuffer, RenderedTextBuffer);
         int TotalDist = Config.LeftCursorStartPos + DiffStart;
 
-        (int x, int y) = CalcXYCordinates(TotalDist);
-        y += CursorVec.Y;
-
-        // Clear the screen.
-        Console.SetCursorPosition(x, y);
+        SetCursorPosition(TotalDist);
         Console.Write(new string(' ', RenderedTextBuffer[DiffStart..].Length));
-        Console.SetCursorPosition(x, y);
+        SetCursorPosition(TotalDist);
     }
 
     private void RenderToken(int token_idx, int char_idx)

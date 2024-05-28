@@ -27,16 +27,16 @@ partial class Creadf
             if (KeyBindings.TryGetValue(Key, out Action func)) func();
             else KeyPress(KeyInfo);
 
-            if (Loop) SetCursorPosition();
+            if (Loop) SetCursorPosition(CursorVec.X);
         }
 
         return TextBuffer;
     }
 
-    private void SetCursorPosition()
+    private void SetCursorPosition(int TotalDist)
     {
         // Properly set cursor in the terminal
-        (int x, int y) = CalcXYCordinates(CursorVec.X);
+        (int x, int y) = CalcXYCordinates(TotalDist);
         y += CursorVec.Y;
 
         if (y >= Console.WindowHeight - 1 && x >= Console.WindowWidth - 1)

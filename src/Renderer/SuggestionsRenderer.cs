@@ -5,19 +5,83 @@ partial class Creadf
     private List<string> AllSuggestions = [];
     private int CurrentSuggestionIdx = 0;
 
-    private void ClearSuggestionBuffer()
+    private void Add_Y_OffsetToCursorPosition()
     {
-        if (StrIsEmpty(RenderedSuggestionsBuffer))
-            return;
+        /*
+        Number of lines to move up by (let k) = RenderedSuggestionsBuffer.Length / Console.WindowWidth
+        Therefore, if the current y pos of the cursor is greater than (Console.WindowHeight - 2),
+        then move the cursor up by 'k' lines otherwise leave it.
 
-        Console.SetCursorPosition(0, CursorVec.Y + 1);
-        Console.Write(new string(' ', RenderedSuggestionsBuffer.Length));
-        Console.SetCursorPosition(CursorVec.X, CursorVec.Y);
+        *NOTE:
+        Changing (Console.WindowHeight - 2) to (Console.WindowHeight - 1) will cause a bug, where it is not moving up properly.
+        */
 
-        RenderedSuggestionsBuffer = "";
+        if (CursorVec.Y >= Console.WindowHeight - 2)
+            CursorVec.Y -= RenderedSuggestionsBuffer.Length / Console.WindowWidth;
+
+        SetCursorPosition(CursorVec.X);
     }
 
-    private void GetSuggestion()
+    private void ClearSuggestionBuffer()
+    {
+        Console.Write("\n" + new string(' ', RenderedSuggestionsBuffer.Length));
+        SetCursorPosition(CursorVec.X);
+    }
+
+    private void RenderSuggestionBuffer()
+    {
+        int SuggestionIdxOnBuffer = MakeSuggestions();
+
+        if (SuggestionIdxOnBuffer == -1)
+            return;
+
+        // Render all suggestions
+        Console.WriteLine();
+        Terminal.Print(RenderedSuggestionsBuffer[..SuggestionIdxOnBuffer], ConsoleColor.DarkGray, false);
+        Terminal.Print(Suggestion, ConsoleColor.Blue, false);
+        Terminal.Print(RenderedSuggestionsBuffer[(SuggestionIdxOnBuffer + Suggestion.Length)..], ConsoleColor.DarkGray, false);
+
+        Add_Y_OffsetToCursorPosition();
+
+        // Get only the uncommon part of suggestion
+        Suggestion = TextBuffer.Length <= Suggestion.Length ? Suggestion[TextBuffer.Length..] : "";
+    }
+
+    private int MakeSuggestions()
+    {
+        // Get all the suggestions based on the current input in the text buffer
+        GetSuggestions();
+
+        if (ArrayIsEmpty(AllSuggestions.ToArray()))
+            return -1;
+
+        // Get the current suggestion
+        Suggestion = AllSuggestions[CurrentSuggestionIdx];
+
+        string SuggestionsBuffer = "";
+        int SuggestionIdxOnBuffer = 0;
+
+        for (int i = 0; i < AllSuggestions.Count; i++)
+        {
+            if (Suggestion == AllSuggestions[i])
+                SuggestionIdxOnBuffer = SuggestionsBuffer.Length;
+
+            SuggestionsBuffer += AllSuggestions[i] + "    ";
+
+            if ((i+1) % 12 == 0)
+            {
+                string Whitespace = new(' ', Console.WindowWidth - (SuggestionsBuffer.Length % Console.WindowWidth));
+                SuggestionsBuffer += Whitespace;
+            }
+        }
+
+        // Set rendered suggestion buffer as the current buffer.
+        RenderedSuggestionsBuffer = SuggestionsBuffer.Trim();
+
+        return SuggestionIdxOnBuffer;
+    }
+
+    private void GetSuggestions()
     {
         if (StrIsEmpty(TextBuffer))
         {
@@ -25,42 +89,8 @@ partial class Creadf
             return;
         }
 
-        AllSuggestions = Config.Suggestions.Where(x => x.StartsWith(TextBuffer)).ToList();
-    }
-
-    private void RenderSuggestionBuffer()
-    {
-        GetSuggestion();
-
-        if (ArrayIsEmpty(AllSuggestions.ToArray()))
-            return;
-
-        else if (CurrentSuggestionIdx < 0 || CurrentSuggestionIdx > AllSuggestions.Count-1)
-            CurrentSuggestionIdx = 0;
-
-        // Get the current suggestion
-        Suggestion = AllSuggestions[CurrentSuggestionIdx];
-
-        // Move to new line to render suggestions
-        Console.WriteLine();
-
-        // Render the suggestions
-        string Buffer = "";
-        for (int i = 0; i < AllSuggestions.Count; i++)
-        {
-            Buffer += AllSuggestions[i] + "    ";
-            Terminal.Print(AllSuggestions[i] + "    ", Suggestion == AllSuggestions[i] ? ConsoleColor.Blue : ConsoleColor.DarkGray, false);
-
-            if ((i+1) % 12 == 0)
-            {
-                string whitespace = new(' ', Console.WindowWidth - (Buffer.Length % Console.WindowWidth));
-                Buffer += whitespace;
-                Console.Write(whitespace);
-            }
-        }
-
-        // Get only the uncommon part of suggestion
-        Suggestion = TextBuffer.Length <= Suggestion.Length ? Suggestion[TextBuffer.Length..] : "";
-        RenderedSuggestionsBuffer = Buffer;
+        AllSuggestions = Config.Suggestions.Where(x => x.StartsWith(TextBuffer)).Take(10).ToList();
+        // Reset the current suggestion index if not properly set.
+        if (CurrentSuggestionIdx < 0 || CurrentSuggestionIdx > AllSuggestions.Count-1) CurrentSuggestionIdx = 0;
     }
 }
