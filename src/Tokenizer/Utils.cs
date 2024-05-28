@@ -5,6 +5,7 @@ partial class Creadf
         public enum TokenType
         {
             EOL = 0,
+            SEMICOLON,
             COMMENT,
             WHITESPACE,
             IDENTIFIER,

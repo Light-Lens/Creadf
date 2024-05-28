@@ -49,10 +49,16 @@ partial class Creadf
 
             // ';' will be used to separate two different commands. Useful for multiple commands in single line.
             else if (tok == ";")
-                AppendToken(TokenType.EOL);
+            {
+                i++;
+                AppendToken(TokenType.SEMICOLON);
+            }
 
             else if (">@!?:".Contains(tok.FirstOrDefault()))
+            {
+                i++;
                 AppendToken(TokenType.SYMBOL);
+            }
 
             else if (IsIdentifier(tok.FirstOrDefault()) && tok.Length == 1)
             {
