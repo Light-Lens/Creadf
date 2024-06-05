@@ -6,7 +6,7 @@ struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Cr
     public bool ToggleColorCoding { get; set; } = ToggleColorCoding;
     public List<string> Suggestions { get; set; } = Suggestions ?? ([]);
     public Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes { get; set; } = SyntaxHighlightCodes;
-    public List<string> CreadfHistory { get; set; } = CreadfHistory;
+    public List<string> CreadfHistory { get; set; } = CreadfHistory ?? ([]);
 }
 
 class CursorVec3
