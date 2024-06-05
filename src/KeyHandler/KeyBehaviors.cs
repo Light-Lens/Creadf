@@ -63,6 +63,13 @@ partial class Creadf
         CurrentSuggestionIdx = 0;
         Suggestion = "";
 
+        if (CursorVec.Y >= Console.WindowHeight - 1)
+        {
+            CursorVec.Y--;
+            SetCursorPosition(CursorVec.X);
+            CursorVec.Y++;
+        }
+
         HandleEscape();
         UpdateBuffer(false);
     }
@@ -72,15 +79,28 @@ partial class Creadf
         if (ArrayIsEmpty(Config.CreadfHistory.ToArray()))
             return;
 
-        CreadfHistoryIdx = (CreadfHistoryIdx - 1) % Config.CreadfHistory.Count;
-        // Take the absolute value of CreadfHistoryIdx
-        if (CreadfHistoryIdx < 0) CreadfHistoryIdx = -CreadfHistoryIdx;
+        CreadfHistoryIdx--;
+
+        //*NOTE: For some reason when CreadfHistoryIdx is negative, then the mod function isn't working so I've to do it manually.
+        // Though it works in HandleUpArrow method, it fails to work in this case for some reason which IDK.
+        if (CreadfHistoryIdx < 0)
+            CreadfHistoryIdx = Config.CreadfHistory.Count - 1;
+
+        else if (CreadfHistoryIdx > Config.CreadfHistory.Count - 1)
+            CreadfHistoryIdx = 0;
 
         TextBuffer = Config.CreadfHistory[CreadfHistoryIdx];
         CursorVec.I = Config.CreadfHistory[CreadfHistoryIdx].Length;
         CursorVec.X = Config.LeftCursorStartPos + Config.CreadfHistory[CreadfHistoryIdx].Length;
         CurrentSuggestionIdx = 0;
         Suggestion = "";
+
+        if (CursorVec.Y >= Console.WindowHeight - 1)
+        {
+            CursorVec.Y--;
+            SetCursorPosition(CursorVec.X);
+            CursorVec.Y++;
+        }
 
         HandleEscape();
         UpdateBuffer(false);
