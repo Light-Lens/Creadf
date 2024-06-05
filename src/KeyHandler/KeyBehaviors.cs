@@ -1,5 +1,7 @@
 partial class Creadf
 {
+    private int CreadfHistoryIdx = 0;
+
     private void KeyPress(ConsoleKeyInfo KeyInfo)
     {
         // Ignore control characters other than the handled keybindings
@@ -48,6 +50,42 @@ partial class Creadf
         UpdateBuffer(false);
     }
 
+    private void HandleUpArrow()
+    {
+        if (ArrayIsEmpty(Config.CreadfHistory.ToArray()))
+            return;
+
+        CreadfHistoryIdx = (CreadfHistoryIdx + 1) % Config.CreadfHistory.Count;
+
+        TextBuffer = Config.CreadfHistory[CreadfHistoryIdx];
+        CursorVec.I = Config.CreadfHistory[CreadfHistoryIdx].Length;
+        CursorVec.X = Config.LeftCursorStartPos + Config.CreadfHistory[CreadfHistoryIdx].Length;
+        CurrentSuggestionIdx = 0;
+        Suggestion = "";
+
+        HandleEscape();
+        UpdateBuffer(false);
+    }
+
+    private void HandleDownArrow()
+    {
+        if (ArrayIsEmpty(Config.CreadfHistory.ToArray()))
+            return;
+
+        CreadfHistoryIdx = (CreadfHistoryIdx - 1) % Config.CreadfHistory.Count;
+        // Take the absolute value of CreadfHistoryIdx
+        if (CreadfHistoryIdx < 0) CreadfHistoryIdx = -CreadfHistoryIdx;
+
+        TextBuffer = Config.CreadfHistory[CreadfHistoryIdx];
+        CursorVec.I = Config.CreadfHistory[CreadfHistoryIdx].Length;
+        CursorVec.X = Config.LeftCursorStartPos + Config.CreadfHistory[CreadfHistoryIdx].Length;
+        CurrentSuggestionIdx = 0;
+        Suggestion = "";
+
+        HandleEscape();
+        UpdateBuffer(false);
+    }
+
     // Render the next suggestion
     private void HandleTab()
     {
@@ -85,6 +123,7 @@ partial class Creadf
     private void HandleShiftEscape()
     {
         TextBuffer = "";
+        CreadfHistoryIdx = 0;
 
         HandleHome();
         HandleEscape();

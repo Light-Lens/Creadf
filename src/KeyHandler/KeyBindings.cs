@@ -30,5 +30,8 @@ partial class Creadf
 
         AddKeyBindings(ConsoleKey.RightArrow, ConsoleModifiers.None, HandleRightArrow);
         AddKeyBindings(ConsoleKey.RightArrow, ConsoleModifiers.Control, HandleCtrlRightArrow);
+
+        AddKeyBindings(ConsoleKey.UpArrow, ConsoleModifiers.None, HandleUpArrow);
+        AddKeyBindings(ConsoleKey.DownArrow, ConsoleModifiers.None, HandleDownArrow);
     }
 }

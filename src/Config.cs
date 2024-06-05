@@ -1,4 +1,4 @@
-struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool ToggleAutoComplete = true, bool ToggleColorCoding = true, List<string> Suggestions = null)
+struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool ToggleAutoComplete = true, bool ToggleColorCoding = true, List<string> Suggestions = null, List<string> CreadfHistory = null)
 {
     public int LeftCursorStartPos { get; set; } = LeftCursorStartPos;
     public int TopCursorStartPos { get; set; } = TopCursorStartPos;
@@ -6,6 +6,7 @@ struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Cr
     public bool ToggleColorCoding { get; set; } = ToggleColorCoding;
     public List<string> Suggestions { get; set; } = Suggestions ?? ([]);
     public Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes { get; set; } = SyntaxHighlightCodes;
+    public List<string> CreadfHistory { get; set; } = CreadfHistory;
 }
 
 class CursorVec3
