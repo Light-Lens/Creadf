@@ -5,6 +5,7 @@ partial class Creadf
     public Dictionary<(ConsoleKey, ConsoleModifiers), Action> KeyBindings = [];
 
     private string TextBuffer = "";
+    private int CreadfHistoryIdx = 0;
     private readonly CreadfConfig Config;
 
     public Creadf(CreadfConfig Config)
@@ -15,6 +16,8 @@ partial class Creadf
             X = this.Config.LeftCursorStartPos,
             Y = this.Config.TopCursorStartPos
         };
+
+        CreadfHistoryIdx = this.Config.CreadfHistory.Count;
     }
 
     public string Readf()

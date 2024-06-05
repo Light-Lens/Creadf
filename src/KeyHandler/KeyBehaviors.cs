@@ -1,7 +1,5 @@
 partial class Creadf
 {
-    private int CreadfHistoryIdx = 0;
-
     private void KeyPress(ConsoleKeyInfo KeyInfo)
     {
         // Ignore control characters other than the handled keybindings
@@ -52,15 +50,13 @@ partial class Creadf
 
     private void HandleUpArrow()
     {
-        if (ArrayIsEmpty(Config.CreadfHistory.ToArray()))
+        if (ArrayIsEmpty(Config.CreadfHistory.ToArray()) || CreadfHistoryIdx <= 0)
             return;
 
-        CreadfHistoryIdx = (CreadfHistoryIdx + 1) % Config.CreadfHistory.Count;
-
+        CreadfHistoryIdx--;
         TextBuffer = Config.CreadfHistory[CreadfHistoryIdx];
         CursorVec.I = Config.CreadfHistory[CreadfHistoryIdx].Length;
         CursorVec.X = Config.LeftCursorStartPos + Config.CreadfHistory[CreadfHistoryIdx].Length;
-        CurrentSuggestionIdx = 0;
         Suggestion = "";
 
         if (CursorVec.Y >= Console.WindowHeight - 1)
@@ -76,23 +72,13 @@ partial class Creadf
 
     private void HandleDownArrow()
     {
-        if (ArrayIsEmpty(Config.CreadfHistory.ToArray()))
+        if (ArrayIsEmpty(Config.CreadfHistory.ToArray()) || CreadfHistoryIdx >= Config.CreadfHistory.Count - 1)
             return;
 
-        CreadfHistoryIdx--;
-
-        //*NOTE: For some reason when CreadfHistoryIdx is negative, then the mod function isn't working so I've to do it manually.
-        // Though it works in HandleUpArrow method, it fails to work in this case for some reason which IDK.
-        if (CreadfHistoryIdx < 0)
-            CreadfHistoryIdx = Config.CreadfHistory.Count - 1;
-
-        else if (CreadfHistoryIdx > Config.CreadfHistory.Count - 1)
-            CreadfHistoryIdx = 0;
-
+        CreadfHistoryIdx++;
         TextBuffer = Config.CreadfHistory[CreadfHistoryIdx];
         CursorVec.I = Config.CreadfHistory[CreadfHistoryIdx].Length;
         CursorVec.X = Config.LeftCursorStartPos + Config.CreadfHistory[CreadfHistoryIdx].Length;
-        CurrentSuggestionIdx = 0;
         Suggestion = "";
 
         if (CursorVec.Y >= Console.WindowHeight - 1)
