@@ -38,7 +38,7 @@ partial class Creadf
         // Render all suggestions
         Console.WriteLine();
         Terminal.Print(RenderedSuggestionsBuffer[..SuggestionIdxOnBuffer], ConsoleColor.DarkGray, false);
-        Terminal.Print(Suggestion, ConsoleColor.Blue, false);
+        Terminal.Print(Suggestion, ConsoleColor.DarkCyan, false);
         Terminal.Print(RenderedSuggestionsBuffer[(SuggestionIdxOnBuffer + Suggestion.Length)..], ConsoleColor.DarkGray, false);
 
         Add_Y_OffsetToCursorPosition();

@@ -52,7 +52,10 @@ partial class Creadf
 
         // Check if the token is to be highlighted or not. If yes, then highlight.
         string Token = token.Name[char_idx..];
-        if (Config.ToggleColorCoding && Config.SyntaxHighlightCodes.TryGetValue(token.Type, out ConsoleColor color))
+        if (Config.ToggleColorCoding && token_idx == 0)
+            Terminal.Print(Token, ConsoleColor.White, false);
+
+        else if (Config.ToggleColorCoding && Config.SyntaxHighlightCodes.TryGetValue(token.Type, out ConsoleColor color))
             Terminal.Print(Token, color, false);
 
         // Otherwise update text after cursor normally.
