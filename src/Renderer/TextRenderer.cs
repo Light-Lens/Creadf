@@ -1,5 +1,6 @@
 partial class Creadf
 {
+    private (int, int) DiffTokenIdx = (0, 0);
     private string RenderedTextBuffer = "";
     private Tokenizer tokenizer;
 
@@ -31,7 +32,9 @@ partial class Creadf
     private void ClearTextBuffer()
     {
         // Find the position where text buffer and rendered text buffer differ at.
-        int DiffStart = GetTextDiff(TextBuffer, RenderedTextBuffer);
+        DiffTokenIdx = GetTokenDiff(TextBuffer, RenderedTextBuffer);
+        // Get starting point of the difference to start clearing the screen from.
+        int DiffStart = string.Join("", tokenizer.tokens[..DiffTokenIdx.Item1].SelectMany(x => x.Name)).Length + DiffTokenIdx.Item2;
         int TotalDist = Config.LeftCursorStartPos + DiffStart;
 
         SetCursorPosition(TotalDist);
@@ -60,8 +63,8 @@ partial class Creadf
     // Render the updated input with syntax highlighting
     private void RenderTextBuffer()
     {
-        // Get difference between TextBuffer and RenderedTextBuffer
-        (int, int) DiffTokenIdx = GetTokenDiff(TextBuffer, RenderedTextBuffer);
+        // // Get difference between TextBuffer and RenderedTextBuffer
+        // DiffTokenIdx = GetTokenDiff(TextBuffer, RenderedTextBuffer);
 
         // Loop through each token starting from first different token
         RenderToken(DiffTokenIdx.Item1, DiffTokenIdx.Item2);

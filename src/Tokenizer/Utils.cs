@@ -13,6 +13,7 @@ partial class Creadf
             BOOL,
             EXPR,
             SYMBOL,
+            HIDDEN
         }
 
         public struct Token(string Name, TokenType Type)

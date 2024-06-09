@@ -74,7 +74,16 @@ partial class Creadf
                 TokenType type;
 
                 if (!Utils.String.IsEmpty(UncommonChars))
-                    type = (tok == "true" || tok == "false") ? TokenType.BOOL : TokenType.IDENTIFIER;
+                {
+                    if (tok == "true" || tok == "false")
+                        type = TokenType.BOOL;
+
+                    else if (tok.StartsWith("__") && tok.EndsWith("__"))
+                        type = TokenType.HIDDEN;
+
+                    else
+                        type = TokenType.IDENTIFIER;
+                }
 
                 else
                     type = TokenType.EXPR;

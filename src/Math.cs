@@ -24,11 +24,17 @@ partial class Creadf
 
         for (int TokenIdx = 0; TokenIdx < SmallestTokenListLen; TokenIdx++)
         {
-            string TextToken = tokenizer.tokens[TokenIdx].Name;
-            string Text2Token = _tokenizer.tokens[TokenIdx].Name;
+            string TextTokenName = tokenizer.tokens[TokenIdx].Name;
+            string Text2TokenName = _tokenizer.tokens[TokenIdx].Name;
 
-            if (TextToken != Text2Token)
-                return (TokenIdx, GetTextDiff(TextToken, Text2Token));
+            Tokenizer.TokenType TextTokenType = tokenizer.tokens[TokenIdx].Type;
+            Tokenizer.TokenType Text2TokenType = _tokenizer.tokens[TokenIdx].Type;
+
+            if (TextTokenType != Text2TokenType)
+                return (TokenIdx, 0);
+
+            else if (TextTokenName != Text2TokenName)
+                return (TokenIdx, GetTextDiff(TextTokenName, Text2TokenName));
         }
 
         // (token_idx, char_idx)
