@@ -66,9 +66,6 @@ partial class Creadf
     // Render the updated input with syntax highlighting
     private void RenderTextBuffer()
     {
-        // // Get difference between TextBuffer and RenderedTextBuffer
-        // DiffTokenIdx = GetTokenDiff(TextBuffer, RenderedTextBuffer);
-
         // Loop through each token starting from first different token
         RenderToken(DiffTokenIdx.Item1, DiffTokenIdx.Item2);
         for (int i = DiffTokenIdx.Item1 + 1; i < tokenizer.tokens.Count; i++)
