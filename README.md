@@ -43,16 +43,7 @@ CreadfConfig config = new(
 
 Structure of all config options that are available as of now.
 ```csharp
-struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool ToggleAutoComplete = true, bool ToggleColorCoding = true, List<string> Suggestions = null, List<string> CreadfHistory = null)
-{
-    public int LeftCursorStartPos { get; set; } = LeftCursorStartPos;
-    public int TopCursorStartPos { get; set; } = TopCursorStartPos;
-    public bool ToggleAutoComplete { get; set; } = ToggleAutoComplete;
-    public bool ToggleColorCoding { get; set; } = ToggleColorCoding;
-    public List<string> Suggestions { get; set; } = Suggestions ?? ([]);
-    public Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes { get; set; } = SyntaxHighlightCodes;
-    public List<string> CreadfHistory { get; set; } = CreadfHistory ?? ([]);
-}
+struct CreadfConfig(int LeftCursorStartPos, int TopCursorStartPos, Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes, bool ToggleAutoComplete = true, bool ToggleColorCoding = true, List<string> Suggestions = null, List<string> CreadfHistory = null);
 ```
 
 - Configuring the Syntax color coding
@@ -119,7 +110,7 @@ Where the default keybindings are the following:
 However you can add more or other Keybindings by using the below method:
 
 ```csharp
-public void AddKeyBindings(ConsoleKey key, ConsoleModifiers modifier, Action action)
+public void AddKeyBindings(ConsoleKey key, ConsoleModifiers modifier, Action action);
 ```
 
 Replace `InitDefaultKeyBindings` by the below code
@@ -137,5 +128,45 @@ AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.Control, HandleCtrlEnter);
 ```csharp
 Console.Write(prompt);
 string output = readline.Readf();
+Console.WriteLine(output);
+```
+
+or you can use the `TakeInput` method.
+
+```csharp
+partial class Terminal
+{
+    public static string TakeInput(CreadfConfig Config, string Prompt="", ConsoleColor PromptColor=ConsoleColor.Gray, ConsoleColor InputColor=ConsoleColor.Gray);
+}
+```
+
+```csharp
+string output = Terminal.TakeInput(Config: config, prompt, ConsoleColor.White);
+Console.WriteLine(output);
+```
+
+so basically instead of creating a new Creadf object you can just simply do the following:
+
+```csharp
+// Take input
+Dictionary<Creadf.Tokenizer.TokenType, ConsoleColor> SyntaxHighlightCodes = [];
+SyntaxHighlightCodes.Add(Creadf.Tokenizer.TokenType.STRING, ConsoleColor.Yellow);
+SyntaxHighlightCodes.Add(Creadf.Tokenizer.TokenType.EXPR, ConsoleColor.Cyan);
+SyntaxHighlightCodes.Add(Creadf.Tokenizer.TokenType.BOOL, ConsoleColor.DarkCyan);
+SyntaxHighlightCodes.Add(Creadf.Tokenizer.TokenType.COMMENT, ConsoleColor.DarkGray);
+SyntaxHighlightCodes.Add(Creadf.Tokenizer.TokenType.SEMICOLON, ConsoleColor.DarkGray);
+SyntaxHighlightCodes.Add(Creadf.Tokenizer.TokenType.HIDDEN, ConsoleColor.DarkGreen);
+
+CreadfConfig config = new(
+    LeftCursorStartPos: prompt.Length,
+    TopCursorStartPos: Console.CursorTop,
+    ToggleColorCoding: true,
+    ToggleAutoComplete: true,
+    Suggestions: ["India", "America", "Russia", "Elon Musk"],
+    SyntaxHighlightCodes: SyntaxHighlightCodes,
+    CreadfHistory: []
+);
+
+string output = Terminal.TakeInput(Config: config, prompt, ConsoleColor.White);
 Console.WriteLine(output);
 ```
