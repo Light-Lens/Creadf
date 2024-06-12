@@ -24,21 +24,21 @@ partial class Creadf
 
         private void MakeString(char StringLiteral)
         {
-            bool IsEscapeChar = false;
+            int IsEscapeChar = 0;
 
             i++;
             while (i < line.Length)
             {
                 tok += line[i];
 
-                if (line[i] == StringLiteral && IsEscapeChar)
-                    IsEscapeChar = false;
+                if (line[i] == StringLiteral && IsEscapeChar == 1)
+                    IsEscapeChar = 0;
 
                 else if (line[i] == StringLiteral)
                     break;
 
                 if (line[i] == '\\')
-                    IsEscapeChar = true;
+                    IsEscapeChar %= IsEscapeChar + 1;
 
                 i++; // Move to next char
             }
