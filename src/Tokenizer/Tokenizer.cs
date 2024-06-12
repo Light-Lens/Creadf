@@ -81,6 +81,9 @@ partial class Creadf
                     else if (tok.StartsWith("__") && tok.EndsWith("__"))
                         type = TokenType.HIDDEN;
 
+                    else if (tok.StartsWith('-'))
+                        type = TokenType.SYMBOL;
+
                     else
                         type = TokenType.IDENTIFIER;
                 }
