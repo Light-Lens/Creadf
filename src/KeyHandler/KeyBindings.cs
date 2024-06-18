@@ -9,6 +9,7 @@ partial class Creadf
     {
         AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.None, HandleEnter);
         AddKeyBindings(ConsoleKey.Enter, ConsoleModifiers.Control, HandleCtrlEnter);
+        AddKeyBindings(ConsoleKey.C, ConsoleModifiers.Control, HandleEnter);
 
         AddKeyBindings(ConsoleKey.Tab, ConsoleModifiers.None, HandleTab);
         AddKeyBindings(ConsoleKey.Spacebar, ConsoleModifiers.Control, HandleCtrlSpacebar);

@@ -24,6 +24,7 @@ partial class Creadf
     {
         while (Loop)
         {
+            Console.TreatControlCAsInput = true;
             ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
             (ConsoleKey, ConsoleModifiers) Key = (KeyInfo.Key, KeyInfo.Modifiers);
 
@@ -33,6 +34,7 @@ partial class Creadf
             if (Loop) SetCursorPosition(CursorVec.X);
         }
 
+        Console.TreatControlCAsInput = false;
         return TextBuffer;
     }
 
